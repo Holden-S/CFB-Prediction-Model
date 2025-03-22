@@ -1,0 +1,89 @@
+---
+title: "Football Data"
+author: "Holden, Calvin, Dhimaan, Sanskaar, Noah"
+date: "2024-04-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      error = TRUE,
+                      message = FALSE, 
+                      warning = FALSE,
+                      comment = NA,
+                      fig.width=9, 
+                      fig.height=7)
+```
+
+## R Markdown
+
+```{r echo=FALSE}
+library(tidyverse)
+library(infer)
+library(knitr)
+library(broom)
+library(ggplot2)
+library(dplyr)
+```
+
+
+```{r echo=TRUE}
+BigTen23<-read.csv("C:/Users/Holde/Downloads/final_big_ten_teams_data.csv")
+BigTen23
+```
+
+## Including Plots
+
+HISTOGRAMS FOR OPPONENT NET PUNT RETURN YARDS:
+
+```{r pressure, echo=FALSE}
+BigTen23_OppPuntYrds<-BigTen23%>%
+  specify(response=oppnetpuntreturnyards)%>%
+  hypothesize(null="point",mu=mean(BigTen23$oppnetpuntreturnyards))%>%
+  generate(reps=1000,type="bootstrap")%>%
+  calculate(stat="mean")
+
+ggplot(data=BigTen23_OppPuntYrds,mapping=aes(stat))+geom_histogram(binwidth=15,fill="magenta",color="black")+geom_vline(xintercept=mean(BigTen23$oppnetpuntreturnyards),color='green')
+```
+```{r}
+ggplot(data=BigTen23,mapping=aes(oppnetpuntreturnyards))+geom_histogram(binwidth=40,fill="magenta",color="black")+geom_vline(xintercept=mean(BigTen23$oppnetpuntreturnyards),color='green')
+
+ggplot(BigTen23,aes(x=Team_Name,y=oppnetpuntreturnyards))+geom_boxplot()+labs(title="Boxplot of Allowed Net Punt Return Yards Total by Team",x="Team",y="Allowed Net Punt Return Yards Total")+theme_minimal()+theme(axis.text.x=element_text(angle=90, hjust=1))
+```
+HISTOGRAMS FOR KICKOFF RETURN YARDS:
+
+```{r}
+BigTen23_KickoffReturnYds<-BigTen23%>%
+  specify(response=kickoffreturnyards)%>%
+  hypothesize(null="point",mu=mean(BigTen23$kickoffreturnyards))%>%
+  generate(reps=1000,type="bootstrap")%>%
+  calculate(stat="mean")
+
+ggplot(data=BigTen23_KickoffReturnYds,mapping=aes(stat))+geom_histogram(binwidth=15,fill="cyan",color="black")+geom_vline(xintercept=mean(BigTen23$kickoffreturnyards),color='hotpink')
+```
+
+```{r}
+ggplot(data=BigTen23,mapping=aes(kickoffreturnyards))+geom_histogram(binwidth=40,fill="cyan",color="black")+geom_vline(xintercept=mean(BigTen23$kickoffreturnyards),color='hotpink')
+
+ggplot(BigTen23,aes(x=Team_Name,y=kickoffreturnyards))+geom_boxplot()+labs(title="Boxplot of Kickoff Return Yards Total by Team",x="Team",y="Kickoff Return Yards Total")+theme_minimal()+theme(axis.text.x=element_text(angle=90, hjust=1))
+```
+HISTOGRAMS FOR FIELD GOALS:
+
+```{r}
+BigTen23_FieldGoals<-BigTen23%>%
+  specify(response=feildgoals)%>%
+  hypothesize(null="point",mu=mean(BigTen23$feildgoals))%>%
+  generate(reps=1000,type="bootstrap")%>%
+  calculate(stat="mean")
+
+ggplot(data=BigTen23_FieldGoals,mapping=aes(stat))+geom_histogram(binwidth=0.5,fill="green",color="black")+geom_vline(xintercept=mean(BigTen23$feildgoals),color='red')
+```
+
+```{r}
+ggplot(data=BigTen23,mapping=aes(feildgoals))+geom_histogram(binwidth=1.5,fill="green",color="black")+geom_vline(xintercept=mean(BigTen23$feildgoals),color='red')
+
+ggplot(BigTen23,aes(x=Team_Name,y=feildgoals))+geom_boxplot()+labs(title="Boxplot of Field Goals by Team",x="Team",y="Field Goals Total")+theme_minimal()+theme(axis.text.x=element_text(angle=90, hjust=1))
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
